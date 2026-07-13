@@ -1,20 +1,24 @@
 import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
-import cors from "cors"
+import cors from "cors";
 import config from "./config";
+import { userRoutes } from "./modules/user/user.route";
 
 const app: Application = express();
-// here is the middleware we have been used 
-app.use(cors({
+// here is the middleware we have been used
+app.use(
+  cors({
     origin: config.app_url,
-    credentials: true
-}))
+    credentials: true,
+  }),
+);
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.get("/",(req: Request, res: Response) => {
-    res.send("Prisma Press Server is running!!!");
-})
+app.get("/", (req: Request, res: Response) => {
+  res.send("Prisma Press Server is running!!!");
+});
 // Here we'll write our API endpoint
+app.use("/api/users", userRoutes);
 export default app;
