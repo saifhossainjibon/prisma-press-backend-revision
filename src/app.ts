@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import config from "./config";
 import { userRoutes } from "./modules/user/user.route";
+import { authRoutes } from "./modules/auth/auth.route";
 
 const app: Application = express();
 // here is the middleware we have been used
@@ -21,4 +22,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 // Here we'll write our API endpoint
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+
 export default app;
