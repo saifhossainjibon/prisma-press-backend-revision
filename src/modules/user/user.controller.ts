@@ -3,50 +3,35 @@ import HttpStatus from "http-status";
 import { userService } from "./users.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import jwt from "jsonwebtoken";
+import config from "../../config";
+import { jwtUtils } from "../../utils/jwt";
 
-
-const registerUser = catchAsync (async (req: Request, res: Response, next: NextFunction)=>{
+const registerUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
     const user = await userService.registerUserIntoDB(payload);
-    sendResponse(res,{
+    sendResponse(res, {
       success: true,
       statusCode: HttpStatus.CREATED,
       message: "User registered successfully",
-      data: { user }
-    })
-    // res.status(HttpStatus.CREATED).json({
-    //   success: true,
-    //   statusCode: HttpStatus.CREATED,
-    //   message: "User registered successfully",
-    //   data: {
-    //     user,
-    //   },
-    // });
-})
+      data: { user },
+    });
+  },
+);
 
+const getMyProfile = async (req: Request,res: Response, next: NextFunction) => {
+  // console.log(req.user)
+  const profile = await userService.getMyProfileFromDB(req.user?.id as string);
 
-// const registerUser = async (req: Request, res: Response) => {
-//   try {
-//     const payload = req.body;
-//     const user = await userService.registerUserIntoDB(payload);
-//     res.status(HttpStatus.CREATED).json({
-//       success: true,
-//       statusCode: HttpStatus.CREATED,
-//       message: "User registered successfully",
-//       data: {
-//         user,
-//       },
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-//       success: false,
-//       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-//       message: "Failed to register user",
-//       error:(error as Error).message
-//     });
-//   }
-// };
+  sendResponse(res, {
+    success: true,
+    statusCode: HttpStatus.OK,
+    message: "User profile fetched successfully",
+    data: { profile },
+  });
+};
 export const userController = {
   registerUser,
+  getMyProfile,
 };
