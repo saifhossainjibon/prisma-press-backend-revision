@@ -23,7 +23,6 @@ const getMyProfile = async (
   res: Response,
   next: NextFunction,
 ) => {
-  // console.log(req.user)
   const profile = await userService.getMyProfileFromDB(req.user?.id as string);
 
   sendResponse(res, {

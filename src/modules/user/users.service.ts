@@ -6,7 +6,7 @@ import { RegisterUserPayload } from "./user.interface";
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, profilePhoto } = payload;
   const isUserExist = await prisma.user.findUnique({
-    where: { email },
+    where: { email }
   });
   if (isUserExist) {
     throw new Error("user with this email already exist");
@@ -27,12 +27,6 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
       },
     },
   });
-  // await prisma.profile.create({
-  //     data:{
-  //         userId: createdUser.id,
-  //         profilePhoto
-  //     }
-  // })
   // aita korar fole amra user er data find korci jaita respose pabo
   const user = await prisma.user.findUnique({
     where: {
@@ -48,6 +42,7 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   });
   return user;
 };
+
 const getMyProfileFromDB = async(id: string)=>{
   const user = await prisma.user.findUniqueOrThrow({
     where:{id},
