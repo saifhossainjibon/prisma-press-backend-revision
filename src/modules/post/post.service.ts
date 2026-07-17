@@ -16,6 +16,99 @@ const getAllPosts = async () => {
   const posts = await prisma.post.findMany(
     // aikhne just amra all post get korci tai where lagbe na and vitore kicu condition
     {
+      // multiple field er upor filtering
+      // where:{
+      //   title:"My fouth Post",
+      //   content: "Ronaldo"
+      // },
+
+      // another way of above filtering (with AND)
+      // where:{
+      //   AND:[
+      //     {
+      //       title:"My fouth Post"
+      //     },
+      //     {
+      //       content: "Ronaldo"
+      //     },
+      //     {
+      //       tags:{
+      //         // has: "typescript",(also you can use 1 veriable)
+      //         equals:[
+      //           "typescript",
+      //           "prisma",
+      //           "express"
+      //         ]
+      //       }
+      //     }
+      //   ]
+      // },
+
+      // searching  partial match 
+      // where:{
+      //   title:{
+      //     contains: "ronaldo",
+      //     mode: "insensitive" //(configure sensetive)
+      //   },
+      //   // not ideal for partial match ( er fole title and content e  "ronaldo" jaigula thakbe just oigula asbe)
+      //   content:{
+      //     contains: "ronaldo"
+      //   }
+      // },
+
+    // where:{
+    //     OR:[
+    //       {
+    //         title:{
+    //           contains: "Ronaldo",
+    //           mode: "insensitive"
+    //         }
+    //       },
+    //       {
+    //         content:{
+    //           contains: "Ronaldo",
+    //           mode: "insensitive"
+    //         }
+    //       },
+    //     ]
+    //   },
+
+            // combining search (OR Operator) and filtering (AND)
+
+            where : {
+                //filtering & searching combined
+                AND : [
+                    {
+                        // searching
+                        OR : [
+                            {
+                                title : {
+                                    contains : "Ron",
+                                    mode : "insensitive"
+                                }
+                            },
+
+                            {
+                                content : {
+                                    contains : "Ron",
+                                    mode : "insensitive"
+                                }
+                                
+                            }
+                        ]
+                    },
+
+                    // filtering
+                    {
+                        title : "Ronaldo nazario"
+                    },
+
+                    {
+                        content : "ronaldo"
+                    }
+                ]
+            },
+    
       include: {
         author: {
           omit: {
