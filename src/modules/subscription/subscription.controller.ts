@@ -17,6 +17,33 @@ const createCheckoutSession = catchAsync(
         });
     }
 )
+const handleWebhook = catchAsync(
+    async(req:Request, res: Response, next: NextFunction)=>{
+        const event = req.body;
+        const signature = req.headers['stripe-signature']!;
+        await subscriptionService.handleWebhook(event, signature as string)
+    sendResponse(res, {
+        success: true,
+        statusCode: HttpStatus.OK,
+        message: "Webhook tiggered Successfully",
+        data: null,
+        });
+    }
+)
+const getSubscriptionStatus = catchAsync(
+    async (req : Request, res : Response, next : NextFunction) => {
+        const userId = req.user?.id
+
+        const result = await subscriptionService.getSubscriptionStatus(userId as string);
+
+        sendResponse(res, {
+            success : true,
+            statusCode : HttpStatus.OK,
+            message : "Subscription status retrived successfully",
+            data : result
+        })
+    }
+)
 export const subscriptionController ={
-    createCheckoutSession
+    createCheckoutSession, handleWebhook,getSubscriptionStatus
 }
